@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CaseForge Pro – Text Case Converter</title>
+  <meta name="description" content="Instantly convert text to UPPERCASE, lowercase, camelCase, PascalCase, Sentence case and more."/>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --bg-deep:      #050a14;
+      --bg-card:      #0b1525;
+      --bg-panel:     #0e1d32;
+      --border:       #1a3558;
+      --border-glow:  #1e5fa8;
+      --accent:       #00d4ff;
+      --accent2:      #7b2fff;
+      --accent3:      #ff6b35;
+      --text-hi:      #e8f4ff;
+      --text-mid:     #8aa8c8;
+      --text-lo:      #3d5a78;
+      --success:      #00e5a0;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body:    'Rajdhani', sans-serif;
+      --font-mono:    'Share Tech Mono', monospace;
+      --radius:       8px;
+      --radius-lg:    14px;
+      --shadow-card:  0 8px 40px rgba(0,0,0,0.55);
+      --shadow-glow:  0 0 24px rgba(0,212,255,0.18);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-deep);
+      color: var(--text-hi);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid noise overlay ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 10;
+      background: linear-gradient(180deg, #07111f 0%, transparent 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+    }
+
+    .logo {
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 800; font-size: 18px; color: #fff;
+      box-shadow: 0 0 18px rgba(0,212,255,0.4);
+    }
+
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 1.2rem; font-weight: 600;
+      letter-spacing: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .logo-sub {
+      font-size: 0.72rem; color: var(--text-mid); letter-spacing: 1px;
+      font-weight: 300;
+    }
+
+    .header-stats {
+      display: flex; gap: 16px;
+    }
+
+    .stat-chip {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.78rem;
+      color: var(--text-mid);
+      font-family: var(--font-mono);
+    }
+
+    .stat-chip span { color: var(--accent); font-weight: 600; }
+
+    /* ── AD BANNER TOP ── */
+    .ad-banner {
+      position: relative; z-index: 5;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      padding: 10px;
+      min-height: 100px;
+    }
+
+    .ad-placeholder {
+      width: 728px; max-width: 100%; height: 90px;
+      background: linear-gradient(135deg, #0d1f35, #162840);
+      border: 1px dashed var(--border-glow);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-lo); font-size: 0.8rem; letter-spacing: 1px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .container {
+      position: relative; z-index: 5;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      grid-template-rows: auto;
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    }
+
+    @media (max-width: 540px) {
+      .sidebar { grid-template-columns: 1fr; }
+    }
+
+    /* ── MAIN CARD ── */
+    .main-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+    }
+
+    .card-header {
+      background: linear-gradient(90deg, #0e1d32, #091629);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .card-header-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: var(--text-mid);
+      text-transform: uppercase;
+    }
+
+    .card-body { padding: 24px; }
+
+    /* ── TEXTAREA ── */
+    .input-section { margin-bottom: 20px; }
+
+    .label-row {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .field-label {
+      font-size: 0.8rem; letter-spacing: 1.5px; text-transform: uppercase;
+      color: var(--text-mid); font-weight: 500;
+    }
+
+    .clear-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-mid);
+      font-size: 0.75rem; padding: 3px 10px;
+      cursor: pointer; font-family: var(--font-body);
+      transition: all 0.2s;
+    }
+    .clear-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+
+    textarea {
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-hi);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      padding: 16px;
+      resize: vertical;
+      min-height: 140px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,212,255,0.12), var(--shadow-glow);
+    }
+    textarea::placeholder { color: var(--text-lo); }
+
+    /* ── CASE BUTTONS ── */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .case-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      cursor: pointer;
+      color: var(--text-hi);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      display: flex; flex-direction: column; gap: 4px;
+      transition: all 0.22s;
+      text-align: left;
+      position: relative; overflow: hidden;
+    }
+
+    .case-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 60%, rgba(0,212,255,0.05));
+      opacity: 0; transition: opacity 0.25s;
+    }
+
+    .case-btn:hover::before { opacity: 1; }
+
+    .case-btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 16px rgba(0,212,255,0.15);
+      transform: translateY(-2px);
+    }
+
+    .case-btn.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, #0a1e38, #0d2a48);
+      box-shadow: 0 0 20px rgba(0,212,255,0.2), inset 0 1px 0 rgba(0,212,255,0.1);
+    }
+
+    .case-btn .btn-name {
+      font-size: 0.92rem; font-weight: 600; color: var(--text-hi);
+    }
+    .case-btn.active .btn-name { color: var(--accent); }
+
+    .case-btn .btn-example {
+      font-size: 0.72rem; color: var(--text-mid);
+      font-family: var(--font-mono);
+    }
+
+    .btn-icon {
+      position: absolute; top: 8px; right: 10px;
+      font-size: 1rem; opacity: 0.25;
+    }
+
+    /* Color variants */
+    .case-btn[data-case="upper"]:hover    { border-color: #ff6b35; box-shadow: 0 0 16px rgba(255,107,53,0.15); }
+    .case-btn[data-case="upper"].active   { border-color: #ff6b35; background: linear-gradient(135deg, #2a0f00, #3d1800); }
+    .case-btn[data-case="upper"].active .btn-name { color: #ff6b35; }
+
+    .case-btn[data-case="lower"]:hover    { border-color: #00e5a0; box-shadow: 0 0 16px rgba(0,229,160,0.15); }
+    .case-btn[data-case="lower"].active   { border-color: #00e5a0; background: linear-gradient(135deg, #001f14, #002e1e); }
+    .case-btn[data-case="lower"].active .btn-name { color: #00e5a0; }
+
+    .case-btn[data-case="camel"]:hover    { border-color: #7b2fff; box-shadow: 0 0 16px rgba(123,47,255,0.15); }
+    .case-btn[data-case="camel"].active   { border-color: #7b2fff; background: linear-gradient(135deg, #12002e, #1c0045); }
+    .case-btn[data-case="camel"].active .btn-name { color: #a97aff; }
+
+    .case-btn[data-case="pascal"]:hover   { border-color: #ffcc00; box-shadow: 0 0 16px rgba(255,204,0,0.15); }
+    .case-btn[data-case="pascal"].active  { border-color: #ffcc00; background: linear-gradient(135deg, #1f1800, #2e2200); }
+    .case-btn[data-case="pascal"].active .btn-name { color: #ffcc00; }
+
+    .case-btn[data-case="sentence"]:hover  { border-color: #00d4ff; }
+    .case-btn[data-case="title"]:hover     { border-color: #ff4f9a; box-shadow: 0 0 16px rgba(255,79,154,0.15); }
+    .case-btn[data-case="title"].active   { border-color: #ff4f9a; background: linear-gradient(135deg, #2a001a, #3d0025); }
+    .case-btn[data-case="title"].active .btn-name { color: #ff4f9a; }
+
+    .case-btn[data-case="snake"]:hover    { border-color: #00cfff; }
+    .case-btn[data-case="kebab"]:hover    { border-color: #ff9f43; box-shadow: 0 0 16px rgba(255,159,67,0.15); }
+    .case-btn[data-case="kebab"].active   { border-color: #ff9f43; background: linear-gradient(135deg, #1f0f00, #2e1800); }
+    .case-btn[data-case="kebab"].active .btn-name { color: #ff9f43; }
+
+    .case-btn[data-case="dot"]:hover      { border-color: #54d0ff; }
+    .case-btn[data-case="dot"].active     { border-color: #54d0ff; background: linear-gradient(135deg, #001a25, #002535); }
+    .case-btn[data-case="dot"].active .btn-name { color: #54d0ff; }
+
+    .case-btn[data-case="constant"]:hover { border-color: #fa5252; box-shadow: 0 0 16px rgba(250,82,82,0.15); }
+    .case-btn[data-case="constant"].active { border-color: #fa5252; background: linear-gradient(135deg, #200000, #2e0000); }
+    .case-btn[data-case="constant"].active .btn-name { color: #fa5252; }
+
+    .case-btn[data-case="alternate"]:hover { border-color: #f3a1ff; }
+    .case-btn[data-case="alternate"].active { border-color: #f3a1ff; background: linear-gradient(135deg, #1a002a, #28003c); }
+    .case-btn[data-case="alternate"].active .btn-name { color: #f3a1ff; }
+
+    /* ── OUTPUT SECTION ── */
+    .output-section { margin-bottom: 20px; }
+
+    .output-box {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      min-height: 120px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--text-hi);
+      line-height: 1.7;
+      word-break: break-word;
+      white-space: pre-wrap;
+      position: relative;
+    }
+
+    .output-empty {
+      color: var(--text-lo); font-style: italic;
+    }
+
+    .output-mode-badge {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,212,255,0.1);
+      border: 1px solid rgba(0,212,255,0.25);
+      border-radius: 4px;
+      font-size: 0.68rem; letter-spacing: 1.5px;
+      color: var(--accent); padding: 2px 8px;
+      font-family: var(--font-display);
+      text-transform: uppercase;
+    }
+
+    /* ── ACTION BAR ── */
+    .action-bar {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+
+    .action-btn {
+      flex: 1; min-width: 120px;
+      padding: 11px 16px;
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 0.88rem; font-weight: 600;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.22s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0,212,255,0.25);
+    }
+    .btn-primary:hover {
+      box-shadow: 0 4px 28px rgba(0,212,255,0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-panel);
+      border-color: var(--border);
+      color: var(--text-mid);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .btn-danger {
+      background: var(--bg-panel);
+      border-color: var(--border);
+      color: var(--text-mid);
+    }
+    .btn-danger:hover {
+      border-color: #fa5252;
+      color: #fa5252;
+    }
+
+    .copy-feedback {
+      display: none;
+      align-items: center; gap: 6px;
+      color: var(--success); font-size: 0.82rem;
+      font-family: var(--font-mono);
+    }
+    .copy-feedback.show { display: flex; }
+
+    /* ── TEXT STATS BAR ── */
+    .stats-bar {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      color: var(--text-mid);
+      font-family: var(--font-mono);
+    }
+    .stat-pill strong { color: var(--accent); }
+
+    /* ── SIDEBAR ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+    .side-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .side-card-title {
+      font-family: var(--font-display);
+      font-size: 0.72rem; letter-spacing: 2px;
+      color: var(--text-mid); text-transform: uppercase;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* History list */
+    .history-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+
+    .history-item {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .history-item:hover { border-color: var(--accent); }
+
+    .history-item .h-case {
+      font-size: 0.68rem; color: var(--text-lo);
+      font-family: var(--font-display); letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+    .history-item .h-text {
+      font-size: 0.8rem; color: var(--text-mid);
+      font-family: var(--font-mono);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .history-empty {
+      font-size: 0.8rem; color: var(--text-lo); text-align: center;
+      padding: 12px 0; font-style: italic;
+    }
+
+    /* Ad side card */
+    .ad-side-placeholder {
+      background: linear-gradient(135deg, #0d1f35, #162840);
+      border: 1px dashed var(--border-glow);
+      border-radius: var(--radius);
+      min-height: 250px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-lo); font-size: 0.78rem; letter-spacing: 1px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── MIDDLE AD ── */
+    .mid-ad-container {
+      position: relative; z-index: 5;
+      max-width: 1200px; margin: 0 auto;
+      padding: 0 20px 24px;
+    }
+
+    .mid-ad-inner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      min-height: 100px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .mid-ad-placeholder {
+      width: 100%; max-width: 728px; height: 90px;
+      background: linear-gradient(135deg, #0d1f35, #162840);
+      border: 1px dashed var(--border-glow);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-lo); font-size: 0.8rem; letter-spacing: 1px;
+      font-family: var(--font-mono);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 5;
+      border-top: 1px solid var(--border);
+      padding: 20px 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+      color: var(--text-lo);
+      font-size: 0.78rem;
+    }
+
+    footer a { color: var(--text-lo); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 0.7rem; letter-spacing: 2px; color: var(--text-lo);
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--success);
+      border-radius: 8px;
+      color: var(--success);
+      padding: 10px 24px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      box-shadow: 0 0 20px rgba(0,229,160,0.3);
+      z-index: 9999;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .toast.show { opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .btn-grid { grid-template-columns: 1fr 1fr; }
+      .header-stats { display: none; }
+      .action-bar .action-btn { min-width: 0; }
+    }
+
+    @media (max-width: 380px) {
+      .btn-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; animation: none !important; }
+    }
+
+    /* ── Scan line shimmer ── */
+    @keyframes scanline {
+      0%   { background-position: 0 0; }
+      100% { background-position: 0 100%; }
+    }
+    .main-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: scanline 3s linear infinite;
+      pointer-events: none;
+    }
+    .main-card { position: relative; }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">Cc</div>
+    <div>
+      <div class="logo-text">CASEFORGE PRO</div>
+      <div class="logo-sub">TEXT CASE CONVERTER</div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="stat-chip">CHARS <span id="hdr-chars">0</span></div>
+    <div class="stat-chip">WORDS <span id="hdr-words">0</span></div>
+  </div>
+</header>
+
+<!-- ── TOP AD ── -->
+<div class="ad-banner">
+  <!-- Replace with real AdSense unit -->
+  <!--
+  <ins class="adsbygoogle"
+       style="display:inline-block;width:728px;height:90px"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="XXXXXXXXXX"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  -->
+  <div class="ad-placeholder">[ Google AdSense — 728×90 Leaderboard Banner ]</div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="container">
+
+  <!-- ── MAIN CARD ── -->
+  <div class="main-card">
+    <div class="card-header">
+      <div class="card-header-dot"></div>
+      <div class="card-title">Input / Convert</div>
+    </div>
+    <div class="card-body">
+
+      <!-- Input -->
+      <div class="input-section">
+        <div class="label-row">
+          <span class="field-label">Your Text</span>
+          <button class="clear-btn" onclick="clearAll()">✕ Clear</button>
+        </div>
+        <textarea id="inputText" placeholder="Type or paste your text here…" rows="6" oninput="onInput()"></textarea>
+      </div>
+
+      <!-- Case buttons -->
+      <div class="btn-grid">
+
+        <button class="case-btn" data-case="upper" onclick="convert('upper')">
+          <span class="btn-name">UPPERCASE</span>
+          <span class="btn-example">hello → HELLO</span>
+          <span class="btn-icon">⬆</span>
+        </button>
+
+        <button class="case-btn" data-case="lower" onclick="convert('lower')">
+          <span class="btn-name">lowercase</span>
+          <span class="btn-example">HELLO → hello</span>
+          <span class="btn-icon">⬇</span>
+        </button>
+
+        <button class="case-btn" data-case="camel" onclick="convert('camel')">
+          <span class="btn-name">camelCase</span>
+          <span class="btn-example">hello world → helloWorld</span>
+          <span class="btn-icon">🐫</span>
+        </button>
+
+        <button class="case-btn" data-case="pascal" onclick="convert('pascal')">
+          <span class="btn-name">PascalCase</span>
+          <span class="btn-example">hello world → HelloWorld</span>
+          <span class="btn-icon">🅿</span>
+        </button>
+
+        <button class="case-btn" data-case="sentence" onclick="convert('sentence')">
+          <span class="btn-name">Sentence case</span>
+          <span class="btn-example">HELLO WORLD → Hello world</span>
+          <span class="btn-icon">✍</span>
+        </button>
+
+        <button class="case-btn" data-case="title" onclick="convert('title')">
+          <span class="btn-name">Title Case</span>
+          <span class="btn-example">hello world → Hello World</span>
+          <span class="btn-icon">📖</span>
+        </button>
+
+        <button class="case-btn" data-case="snake" onclick="convert('snake')">
+          <span class="btn-name">snake_case</span>
+          <span class="btn-example">Hello World → hello_world</span>
+          <span class="btn-icon">🐍</span>
+        </button>
+
+        <button class="case-btn" data-case="kebab" onclick="convert('kebab')">
+          <span class="btn-name">kebab-case</span>
+          <span class="btn-example">Hello World → hello-world</span>
+          <span class="btn-icon">🍢</span>
+        </button>
+
+        <button class="case-btn" data-case="constant" onclick="convert('constant')">
+          <span class="btn-name">CONSTANT_CASE</span>
+          <span class="btn-example">hello world → HELLO_WORLD</span>
+          <span class="btn-icon">🔒</span>
+        </button>
+
+        <button class="case-btn" data-case="dot" onclick="convert('dot')">
+          <span class="btn-name">dot.case</span>
+          <span class="btn-example">Hello World → hello.world</span>
+          <span class="btn-icon">·</span>
+        </button>
+
+        <button class="case-btn" data-case="alternate" onclick="convert('alternate')">
+          <span class="btn-name">aLtErNaTe</span>
+          <span class="btn-example">hello → hElLo</span>
+          <span class="btn-icon">〜</span>
+        </button>
+
+        <button class="case-btn" data-case="inverse" onclick="convert('inverse')">
+          <span class="btn-name">iNVERSE</span>
+          <span class="btn-example">Hello → hELLO</span>
+          <span class="btn-icon">↕</span>
+        </button>
+
+      </div>
+
+      <!-- Output -->
+      <div class="output-section">
+        <div class="label-row">
+          <span class="field-label">Output Preview</span>
+          <span class="copy-feedback" id="copyFeedback">✔ Copied!</span>
+        </div>
+        <div class="output-box" id="outputBox">
+          <span class="output-empty" id="outputEmpty">Converted text will appear here…</span>
+          <span class="output-mode-badge" id="modeBadge" style="display:none"></span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-bar">
+        <button class="action-btn btn-primary" onclick="copyOutput()">⎘ Copy Output</button>
+        <button class="action-btn btn-secondary" onclick="pasteToInput()">⇦ Use as Input</button>
+        <button class="action-btn btn-secondary" onclick="downloadOutput()">↓ Download .txt</button>
+        <button class="action-btn btn-danger"    onclick="clearAll()">✕ Clear All</button>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar" id="statsBar">
+        <div class="stat-pill">Chars: <strong id="statChars">0</strong></div>
+        <div class="stat-pill">Chars (no spaces): <strong id="statCharsNS">0</strong></div>
+        <div class="stat-pill">Words: <strong id="statWords">0</strong></div>
+        <div class="stat-pill">Lines: <strong id="statLines">0</strong></div>
+        <div class="stat-pill">Sentences: <strong id="statSentences">0</strong></div>
+        <div class="stat-pill">Paragraphs: <strong id="statParas">0</strong></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+
+    <!-- History -->
+    <div class="side-card">
+      <div class="side-card-title">Conversion History</div>
+      <ul class="history-list" id="historyList">
+        <li class="history-empty" id="historyEmpty">No conversions yet</li>
+      </ul>
+    </div>
+
+    <!-- Side Ad -->
+    <div class="side-card" style="padding:10px;">
+      <!-- Replace with real AdSense unit -->
+      <!--
+      <ins class="adsbygoogle"
+           style="display:block;width:260px;height:260px"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+      <div class="ad-side-placeholder">[ 260×260<br/>AdSense Square ]</div>
+    </div>
+
+    <!-- Quick Tips -->
+    <div class="side-card">
+      <div class="side-card-title">Quick Tips</div>
+      <div style="font-size:0.8rem;color:var(--text-mid);line-height:1.8;display:flex;flex-direction:column;gap:8px;">
+        <div>🐍 <strong style="color:var(--text-hi);">snake_case</strong> – Python variables</div>
+        <div>🐫 <strong style="color:var(--text-hi);">camelCase</strong> – JS variables</div>
+        <div>🅿 <strong style="color:var(--text-hi);">PascalCase</strong> – Classes / React</div>
+        <div>🍢 <strong style="color:var(--text-hi);">kebab-case</strong> – CSS classes / URLs</div>
+        <div>🔒 <strong style="color:var(--text-hi);">CONSTANT_CASE</strong> – Constants / ENV</div>
+        <div>📖 <strong style="color:var(--text-hi);">Title Case</strong> – Headings</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── MID AD ── -->
+<div class="mid-ad-container">
+  <div class="mid-ad-inner">
+    <!-- Replace with real AdSense unit -->
+    <!--
+    <ins class="adsbygoogle"
+         style="display:inline-block;width:728px;height:90px"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    -->
+    <div class="mid-ad-placeholder">[ Google AdSense — 728×90 Responsive Ad Unit ]</div>
+  </div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">CASEFORGE PRO</div>
+  <div>© 2025 CaseForge. All rights reserved.</div>
+  <div><a href="#">Privacy</a> · <a href="#">Terms</a></div>
+</footer>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<!-- ── JAVASCRIPT ── -->
+<script>
+  let currentCase = null;
+  let history = [];
+
+  const inputEl    = document.getElementById('inputText');
+  const outputEl   = document.getElementById('outputBox');
+  const outputEmpty= document.getElementById('outputEmpty');
+  const modeBadge  = document.getElementById('modeBadge');
+  const historyList= document.getElementById('historyList');
+  const histEmpty  = document.getElementById('historyEmpty');
+  const toastEl    = document.getElementById('toast');
+
+  /* ── CONVERSION ENGINE ── */
+  const converters = {
+    upper:    t => t.toUpperCase(),
+    lower:    t => t.toLowerCase(),
+    sentence: t => t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase()),
+    title:    t => t.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()),
+    camel:    t => {
+      const w = words(t);
+      return w[0].toLowerCase() + w.slice(1).map(capitalize).join('');
+    },
+    pascal:   t => words(t).map(capitalize).join(''),
+    snake:    t => words(t).map(w=>w.toLowerCase()).join('_'),
+    kebab:    t => words(t).map(w=>w.toLowerCase()).join('-'),
+    constant: t => words(t).map(w=>w.toUpperCase()).join('_'),
+    dot:      t => words(t).map(w=>w.toLowerCase()).join('.'),
+    alternate:t => [...t].map((c,i) => i%2===0 ? c.toLowerCase() : c.toUpperCase()).join(''),
+    inverse:  t => [...t].map(c => c===c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('')
+  };
+
+  function words(str) {
+    return str
+      .replace(/([a-z])([A-Z])/g,'$1 $2')
+      .replace(/[_\-\.]+/g,' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+  }
+
+  function capitalize(s) {
+    return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+  }
+
+  /* ── LABELS ── */
+  const labels = {
+    upper:'UPPERCASE', lower:'lowercase', camel:'camelCase',
+    pascal:'PascalCase', sentence:'Sentence case', title:'Title Case',
+    snake:'snake_case', kebab:'kebab-case', constant:'CONSTANT_CASE',
+    dot:'dot.case', alternate:'aLtErNaTe', inverse:'iNVERSE'
+  };
+
+  /* ── CONVERT ── */
+  function convert(caseType) {
+    const input = inputEl.value;
+    if (!input.trim()) { showToast('Please enter some text first!'); return; }
+
+    // remove previous active
+    document.querySelectorAll('.case-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelector(`[data-case="${caseType}"]`).classList.add('active');
+
+    currentCase = caseType;
+    const result = converters[caseType](input);
+
+    // render output
+    outputEmpty.style.display = 'none';
+    outputEl.textContent = result;
+    outputEl.appendChild(outputEmpty);
+
+    modeBadge.textContent = labels[caseType];
+    modeBadge.style.display = 'block';
+
+    // history
+    addHistory(caseType, result);
+  }
+
+  /* ── INPUT EVENTS ── */
+  function onInput() {
+    updateStats();
+    if (currentCase) convert(currentCase);
+  }
+
+  /* ── STATS ── */
+  function updateStats() {
+    const t = inputEl.value;
+    const chars   = t.length;
+    const charsNS = t.replace(/\s/g,'').length;
+    const words   = t.trim() ? t.trim().split(/\s+/).length : 0;
+    const lines   = t ? t.split('\n').length : 0;
+    const sents   = t.trim() ? (t.match(/[^.!?]*[.!?]/g)||[]).length : 0;
+    const paras   = t.trim() ? t.split(/\n\s*\n/).filter(p=>p.trim()).length : 0;
+
+    document.getElementById('statChars').textContent   = chars;
+    document.getElementById('statCharsNS').textContent = charsNS;
+    document.getElementById('statWords').textContent   = words;
+    document.getElementById('statLines').textContent   = lines;
+    document.getElementById('statSentences').textContent = sents;
+    document.getElementById('statParas').textContent   = paras || (t.trim()?1:0);
+    document.getElementById('hdr-chars').textContent   = chars;
+    document.getElementById('hdr-words').textContent   = words;
+  }
+
+  /* ── HISTORY ── */
+  function addHistory(caseType, text) {
+    history.unshift({ caseType, text });
+    if (history.length > 8) history.pop();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    histEmpty.style.display = 'none';
+    historyList.innerHTML = '';
+    history.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.className = 'history-item';
+      li.innerHTML = `<div class="h-case">${labels[item.caseType]}</div>
+                      <div class="h-text">${item.text}</div>`;
+      li.onclick = () => {
+        inputEl.value = item.text;
+        onInput();
+      };
+      historyList.appendChild(li);
+    });
+    if (!history.length) historyList.appendChild(histEmpty);
+  }
+
+  /* ── ACTIONS ── */
+  function getOutputText() {
+    return outputEl.textContent.replace(modeBadge.textContent,'').trim();
+  }
+
+  async function copyOutput() {
+    const text = getOutputText();
+    if (!text || text === 'Converted text will appear here…') {
+      showToast('Nothing to copy yet!'); return;
+    }
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast('✔ Copied to clipboard!');
+    } catch {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('✔ Copied!');
+    }
+  }
+
+  function pasteToInput() {
+    const text = getOutputText();
+    if (!text || text === 'Converted text will appear here…') {
+      showToast('Nothing to use as input!'); return;
+    }
+    inputEl.value = text;
+    currentCase = null;
+    document.querySelectorAll('.case-btn').forEach(b=>b.classList.remove('active'));
+    outputEmpty.style.display = 'inline';
+    modeBadge.style.display = 'none';
+    outputEl.textContent = '';
+    outputEl.appendChild(outputEmpty);
+    updateStats();
+    inputEl.focus();
+    showToast('Output moved to input!');
+  }
+
+  function downloadOutput() {
+    const text = getOutputText();
+    if (!text || text === 'Converted text will appear here…') {
+      showToast('Nothing to download!'); return;
+    }
+    const blob = new Blob([text], {type:'text/plain'});
+    const a    = document.createElement('a');
+    a.href     = URL.createObjectURL(blob);
+    a.download = `caseforge-${currentCase||'text'}.txt`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    showToast('↓ Downloaded!');
+  }
+
+  function clearAll() {
+    inputEl.value = '';
+    currentCase   = null;
+    document.querySelectorAll('.case-btn').forEach(b=>b.classList.remove('active'));
+    outputEl.textContent = '';
+    outputEl.appendChild(outputEmpty);
+    outputEmpty.style.display = 'inline';
+    modeBadge.style.display   = 'none';
+    updateStats();
+  }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2200);
+  }
+
+  /* ── KEYBOARD SHORTCUTS ── */
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey||e.metaKey) && !e.shiftKey) {
+      const map = {
+        'u':'upper','l':'lower','m':'camel','p':'pascal',
+        's':'sentence','t':'title','n':'snake','k':'kebab'
+      };
+      if (map[e.key]) { e.preventDefault(); convert(map[e.key]); }
+      if (e.key==='d') { e.preventDefault(); downloadOutput(); }
+    }
+  });
+
+  // Init
+  updateStats();
+</script>
+</body>
+</html>
